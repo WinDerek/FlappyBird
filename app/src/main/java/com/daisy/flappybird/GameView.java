@@ -46,26 +46,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
 
-//    private Timer timer;
-//
-//    private Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message message) {
-//            switch (message.what) {
-//                case UPDATE:
-//                    GameView.this.update();
-//
-//                    break;
-//
-//                default:
-//                    break;
-//            }
-//        }
-//    };
-//
-//    // The what values of the messages
-//    private static final int UPDATE = 0x00;
-
     public GameView(Context context) {
         super(context);
 
@@ -103,9 +83,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void init() {
         /* Initializes */
 
-        // Derek is debugging...
-        Log.i("DerekDick", "GameView init()");
-
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
@@ -114,38 +91,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // For the bird
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_bird);
-
-        // Derek is debugging...
-        Log.i("DerekDick", "GameView init() about to new pipeList");
+        bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+//        bitmap.eraseColor(Color.parseColor("#FF0000")); // For debugging...
 
         // For the pipes
         pipeList = new ArrayList<Pipe>();
 
-        // Derek is debugging...
-        Log.i("DerekDick", "GameView init() pipeList is new ");
-
         setFocusable(true);
         setKeepScreenOn(true);
-
-//        // Set a new Timer
-//        setNewTimer();
     }
-
-//    private void setNewTimer() {
-//        /* Sets the Timer to update the UI of the GameView  */
-//
-//        timer = new Timer();
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                // Send the message to the handler to update the UI of the GameView
-//                GameView.this.handler.sendEmptyMessage(UPDATE);
-//
-//                // For garbage collection
-//                System.gc();
-//            }
-//        }, 0, 10);
-//    }
 
     public void update() {
         /* Updates the UI */
@@ -159,8 +113,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawColor(Color.WHITE);
 
         // Draw the bird
-        canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, 100, 100, false),
-                positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
+        canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
         // Draw the pipes
         paint.setColor(Color.parseColor("#A1713B"));
@@ -220,18 +173,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Set the initial position
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
-        // Derek is debugging...
-        Log.i("DerekDick", "GameView onSizeChanged() about to pipeList.add()");
-        if (pipeList == null) {
-            Log.i("DerekDick", "pipeList is null!!! WTF");
-        }
-
         // Add the initial pipe
         pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
                 300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
-
-        // Derek is debugging...
-        Log.i("DerekDick", "GameView onSizeChanged()");
     }
 
     public void jump() {
@@ -265,8 +209,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (Pipe pipe : pipeList) {
             if ((pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) &&
                     (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + 100.0f / 2.0f)) {
-                if ((positionY <= measuredHeight - pipe.getHeight() - gap + 60.0f / 2.0f) ||
-                        (positionY >= measuredHeight - pipe.getHeight() - 60.0f / 2.0f)) {
+                if ((positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) ||
+                        (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f)) {
                     return false;
                 }
             }

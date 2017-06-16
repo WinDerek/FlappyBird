@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 import java.util.Timer;
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         // 隐藏状态栏
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        // 把Activity的标题去掉
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 把Activity的标题去掉
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
 
@@ -57,14 +58,10 @@ public class MainActivity extends AppCompatActivity {
         initViews();
 
         // Set the Timer
-//        setNewTimer();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    // Derek is debugging...
-                    Log.i("DerekDick", "MainActivity Thread to set new timer started");
-
                     // Sleep for 3 seconds for the Surface to initialize
                     Thread.sleep(3000);
 
@@ -106,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNewTimer() {
         /* Sets the Timer to update the UI of the GameView  */
-
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity setNewTimer");
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
