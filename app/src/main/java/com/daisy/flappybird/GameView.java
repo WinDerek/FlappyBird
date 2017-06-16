@@ -3,6 +3,9 @@ package com.daisy.flappybird;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
@@ -94,13 +97,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
+        setZOrderOnTop(true);
+        surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
+
         paint = new Paint();
         paint.setAntiAlias(true);
 
         // For the bird
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_bird);
         bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
-//        bitmap.eraseColor(Color.parseColor("#FF0000")); // For debugging...
 
         // For the pipes
         pipeList = new ArrayList<Pipe>();
@@ -113,12 +118,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         /* Updates the UI */
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
 
         Canvas canvas = surfaceHolder.lockCanvas();
 
         // Clear the canvas
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         // Draw the bird
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);

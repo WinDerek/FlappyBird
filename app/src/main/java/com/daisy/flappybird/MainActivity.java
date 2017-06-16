@@ -1,7 +1,9 @@
 package com.daisy.flappybird;
 
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,25 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         timer.cancel();
                         timer.purge();
+
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                        alertDialog.setTitle("GAME OVER");
+                        alertDialog.setMessage("Score: " + String.valueOf(gameView.getScore()) +
+                                "\n" + "Would you like to RESTART?");
+                        alertDialog.setCancelable(false);
+                        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainActivity.this.restartGame();
+                            }
+                        });
+                        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainActivity.this.onBackPressed();
+                            }
+                        });
+                        alertDialog.show();
                     }
 
                     break;
@@ -151,5 +172,11 @@ public class MainActivity extends AppCompatActivity {
     public void increaseScore() {
         score++;
         updateScore(score);
+    }
+
+    private void restartGame() {
+        /* Restarts the game */
+
+
     }
 }
