@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- The GameView -->
     <com.daisy.flappybird.GameView
-        android:id="@+id/game_view_main_activity"
+        android:id="@+id/game_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <TextView android:id="@+id/text_view_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:textColor="#EEC75B39"
+        android:textSize="40sp"
+        android:text="0"
+        android:background="#00000000" />
+
+</FrameLayout>

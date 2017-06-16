@@ -9,14 +9,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private GameView gameView;
+    private TextView textViewScore;
 
     private Timer timer;
+
+    private int score = 0;
 
     private Handler handler = new Handler() {
         @Override
@@ -28,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         timer.cancel();
                         timer.purge();
-                        setTitle("Game Over");
                     }
 
                     break;
@@ -49,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
         // 隐藏状态栏
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // 把Activity的标题去掉
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
 
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         /* Initializes the private views */
 
-        this.gameView = (GameView) this.findViewById(R.id.game_view_main_activity);
+        gameView = (GameView) findViewById(R.id.game_view);
+        textViewScore = (TextView) findViewById(R.id.text_view_score);
     }
 
     private void setNewTimer() {
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 // For garbage collection
                 System.gc();
             }
-        }, 0, 10);
+        }, 0, 17);
     }
 
     @Override
@@ -138,5 +140,16 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
 
 //        setNewTimer();
+    }
+
+    public void updateScore(int score) {
+        /* Updates the displayed score */
+
+        textViewScore.setText(String.valueOf(score));
+    }
+
+    public void increaseScore() {
+        score++;
+        updateScore(score);
     }
 }

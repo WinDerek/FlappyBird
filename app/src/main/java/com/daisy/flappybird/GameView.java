@@ -31,6 +31,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint paint;
     private Bitmap bitmap;
 
+    // The current score
+    private int score = 0;
+
+    public int getScore() {
+        return score;
+    }
+
     // For the bird
     private float positionX = 0.0f;
     private float positionY = 0.0f;
@@ -45,6 +52,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final float gap = 300.0f;
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
+    private float pipeVelocity = 3.0f;
 
     public GameView(Context context) {
         super(context);
@@ -116,7 +124,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
         // Draw the pipes
-        paint.setColor(Color.parseColor("#A1713B"));
+        paint.setColor(Color.parseColor("#607D8B"));
         List<Integer> removeList = new ArrayList<Integer>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
@@ -151,7 +159,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // Update the data for the pipes
         for (Pipe pipe : pipeList) {
-            pipe.setPositionX(pipe.getPositionX() - 3.0f);
+            pipe.setPositionX(pipe.getPositionX() - pipeVelocity);
         }
         if (iteratorInt == interval) {
             pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
@@ -212,6 +220,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 if ((positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) ||
                         (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f)) {
                     return false;
+                } else {
+                    if (pipe.getPositionX() - pipeVelocity <
+                            measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) {
+                        score++;
+                        // Derek is debugging...
+                        Log.i("DerekDick", "Score = " + String.valueOf(score));
+
+                        // Update the score in MainActivity
+                        Context context = getContext();
+                        if (context instanceof MainActivity) {
+                            ((MainActivity) context).updateScore(score);
+                        }
+                    }
                 }
             }
         }
