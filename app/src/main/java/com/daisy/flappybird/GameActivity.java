@@ -52,6 +52,7 @@ public class GameActivity extends AppCompatActivity {
                             timer.cancel();
 //                        timer.purge();
                         } else {
+                            audioRecorder.stopThread();
                             audioRecorder = null;
                         }
 
@@ -172,6 +173,8 @@ public class GameActivity extends AppCompatActivity {
         boolean isGetVoiceRun;
         Object mLock;
 
+        private Thread thread;
+
         public AudioRecorder() {
             mLock = new Object();
         }
@@ -189,7 +192,7 @@ public class GameActivity extends AppCompatActivity {
             }
             isGetVoiceRun = true;
 
-            new Thread(new Runnable() {
+            thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mAudioRecord.startRecording();
@@ -226,7 +229,12 @@ public class GameActivity extends AppCompatActivity {
                     mAudioRecord.release();
                     mAudioRecord = null;
                 }
-            }).start();
+            });
+            thread.start();
+        }
+
+        public void stopThread() {
+            thread.stop();
         }
     }
 
