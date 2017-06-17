@@ -32,8 +32,15 @@ public class MainActivity extends AppCompatActivity {
                     if (gameView.isAlive()) {
                         gameView.update();
                     } else {
+                        // Derek is debugging...
+                        Log.i("DerekDick", "MainActivity game over");
+
+                        // Cancel the timer
                         timer.cancel();
-                        timer.purge();
+//                        timer.purge();
+
+                        // Derek is debugging...
+                        Log.i("DerekDick", "MainActivity timer cancelled");
 
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
                         alertDialog.setTitle("GAME OVER");
@@ -57,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
                     break;
 
+                case RESET_SCORE:
+                    textViewScore.setText("0");
+
+                    break;
+
                 default:
                     break;
             }
@@ -65,12 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
     // The what values of the messages
     private static final int UPDATE = 0x00;
+    private static final int RESET_SCORE = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 隐藏状态栏
+        // Hide the status bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -86,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // Sleep for 3 seconds for the Surface to initialize
                     Thread.sleep(3000);
-
-                    setNewTimer();
                 } catch (Exception exception) {
+                    exception.printStackTrace();
+                } finally {
+                    setNewTimer();
                 }
             }
         }).start();
@@ -126,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNewTimer() {
         /* Sets the Timer to update the UI of the GameView  */
+
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity setNewTimer");
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -169,14 +186,33 @@ public class MainActivity extends AppCompatActivity {
         textViewScore.setText(String.valueOf(score));
     }
 
-    public void increaseScore() {
-        score++;
-        updateScore(score);
-    }
-
     private void restartGame() {
         /* Restarts the game */
 
+        // Reset all the data of the over game in the GameView
+        gameView.resetData();
 
+//        // Refresh the TextView for displaying the score
+//        textViewScore.setText("0");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(RESET_SCORE);
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Sleep for 3 seconds
+                    Thread.sleep(3000);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                } finally {
+                    setNewTimer();
+                }
+            }
+        }).start();
     }
 }

@@ -55,7 +55,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final float gap = 300.0f;
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
-    private float pipeVelocity = 3.0f;
+    private static final float pipeVelocity = 3.0f;
 
     public GameView(Context context) {
         super(context);
@@ -110,7 +110,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // For the pipes
         pipeList = new ArrayList<Pipe>();
 
-        setFocusable(true);
+//        setFocusable(true);
         setKeepScreenOn(true);
     }
 
@@ -223,6 +223,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + 100.0f / 2.0f)) {
                 if ((positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) ||
                         (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f)) {
+                    // Derek is debugging...
+                    Log.i("DerekDick", "GameView isAlive: hit the pipe");
+
                     return false;
                 } else {
                     if (pipe.getPositionX() - pipeVelocity <
@@ -243,6 +246,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // Check if the bird goes beyond the border
         if ((positionY < 0.0f + 100.0f / 2.0f) || (positionY > measuredHeight - 100.0f / 2.0f)) {
+            // Derek is debugging...
+            Log.i("DerekDick", "GameView isAlive: beyond the border");
+
             return false;
         }
 
@@ -271,5 +277,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         pipeList = newList;
+    }
+
+    public void resetData() {
+        /* Resets all the data of the over game */
+
+        // For the bird
+        positionX = 0.0f;
+        positionY = 0.0f;
+        velocityX = 0.0f;
+        velocityY = 0.0f;
+        accelerationX = 0.0f;
+        accelerationY = 0.7f;
+
+        // For the pipes
+        iteratorInt = 0;
+//        pipeList.clear();
+        pipeList = new ArrayList<Pipe>();
+
+        score = 0;
+
+        // Set the initial position
+        setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
+
+        // Add the initial pipe
+        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
+                300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
     }
 }
