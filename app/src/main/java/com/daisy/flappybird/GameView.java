@@ -128,7 +128,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
         // Draw the pipes
-        paint.setColor(Color.parseColor("#607D8B"));
+//        paint.setColor(Color.parseColor("#607D8B"));
+        paint.setColor(Color.parseColor("#C75B39"));
         List<Integer> removeList = new ArrayList<Integer>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
@@ -236,8 +237,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                         // Update the score in MainActivity
                         Context context = getContext();
-                        if (context instanceof MainActivity) {
-                            ((MainActivity) context).updateScore(score);
+                        if (context instanceof GameActivity) {
+                            ((GameActivity) context).updateScore(score);
+                            ((GameActivity) context).playScoreMusic();
                         }
                     }
                 }
