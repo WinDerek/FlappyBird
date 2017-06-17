@@ -23,6 +23,14 @@ public class GameActivity extends AppCompatActivity {
     private GameView gameView;
     private TextView textViewScore;
 
+    private boolean isGameOver;
+
+    // Derek is debugging...
+    private int sendTimes = 0;
+    private int handleTimes = 0;
+
+    private AlertDialog.Builder alertDialog;
+
     private MediaPlayer mediaPlayer;
 
     private int gameMode;
@@ -41,25 +49,37 @@ public class GameActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             switch (message.what) {
                 case UPDATE:
+                    // Derek is debugging...
+                    Log.i("DerekDick", "MainActivity handler handleMessage " +
+                            String.valueOf(++handleTimes));
+
                     if (gameView.isAlive()) {
+                        isGameOver = false;
                         gameView.update();
                     } else {
+                        if (isGameOver) {
+                            break;
+                        } else {
+                            isGameOver = true;
+                        }
+
                         // Derek is debugging...
                         Log.i("DerekDick", "MainActivity game over");
 
                         if (gameMode == TOUCH_MODE) {
+                            // Derek is debugging...
+                            Log.i("DerekDick", "MainActivity timer cancelled");
+
                             // Cancel the timer
                             timer.cancel();
-//                        timer.purge();
+                            timer.purge();
                         } else {
-                            audioRecorder.stopThread();
+//                            audioRecorder.stopThread();
                             audioRecorder = null;
+                            System.gc();
                         }
 
-                        // Derek is debugging...
-                        Log.i("DerekDick", "MainActivity timer cancelled");
-
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(GameActivity.this);
+                        alertDialog = new AlertDialog.Builder(GameActivity.this);
                         alertDialog.setTitle("GAME OVER");
                         alertDialog.setMessage("Score: " + String.valueOf(gameView.getScore()) +
                                 "\n" + "Would you like to RESTART?");
@@ -211,7 +231,7 @@ public class GameActivity extends AppCompatActivity {
 //                        Log.i(TAG, "分贝值:" + volume);
 
                         // Jump if the volume is loud enough
-                        if (volume > 60.0) {
+                        if (volume > 50.0) {
                             GameActivity.this.gameView.jump();
                             Log.i(TAG, "分贝值: " + volume + "超过了");
                         }
@@ -219,7 +239,7 @@ public class GameActivity extends AppCompatActivity {
                         // 大概一秒十次
                         synchronized (mLock) {
                             try {
-                                mLock.wait(70);
+                                mLock.wait(17);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -255,6 +275,10 @@ public class GameActivity extends AppCompatActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                // Derek is debugging...
+                Log.i("DerekDick", "MainActivity timer UPDATE message about to be sent " +
+                        String.valueOf(++sendTimes));
+
                 // Send the message to the handler to update the UI of the GameView
                 GameActivity.this.handler.sendEmptyMessage(UPDATE);
 
@@ -299,7 +323,9 @@ public class GameActivity extends AppCompatActivity {
         // Derek is debugging...
         Log.i("DerekDick", "MainActivity playScoreMusic");
 
-        mediaPlayer.start();
+        if (gameMode == TOUCH_MODE) {
+            mediaPlayer.start();
+        }
     }
 
     private void restartGame() {

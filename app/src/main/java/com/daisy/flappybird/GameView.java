@@ -128,7 +128,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
         // Draw the pipes
-//        paint.setColor(Color.parseColor("#607D8B"));
         paint.setColor(Color.parseColor("#C75B39"));
         List<Integer> removeList = new ArrayList<Integer>();
         int size = pipeList.size();
@@ -224,16 +223,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + 100.0f / 2.0f)) {
                 if ((positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) ||
                         (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f)) {
-                    // Derek is debugging...
-                    Log.i("DerekDick", "GameView isAlive: hit the pipe");
-
                     return false;
                 } else {
                     if (pipe.getPositionX() - pipeVelocity <
                             measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) {
                         score++;
-                        // Derek is debugging...
-                        Log.i("DerekDick", "Score = " + String.valueOf(score));
 
                         // Update the score in MainActivity
                         Context context = getContext();
@@ -248,9 +242,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // Check if the bird goes beyond the border
         if ((positionY < 0.0f + 100.0f / 2.0f) || (positionY > measuredHeight - 100.0f / 2.0f)) {
-            // Derek is debugging...
-            Log.i("DerekDick", "GameView isAlive: beyond the border");
-
             return false;
         }
 
