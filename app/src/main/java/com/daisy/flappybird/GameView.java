@@ -167,8 +167,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pipe.setPositionX(pipe.getPositionX() - pipeVelocity);
         }
         if (iteratorInt == interval) {
-//            pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-//                    450.0f + (measuredHeight - 900.0f) * new Random().nextFloat()));
             addPipe();
             iteratorInt = 0;
         } else {
@@ -188,8 +186,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
         // Add the initial pipe
-//        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-//                300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
         addPipe();
     }
 
@@ -288,7 +284,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // For the pipes
         iteratorInt = 0;
-//        pipeList.clear();
         pipeList = new ArrayList<Pipe>();
 
         score = 0;
@@ -297,8 +292,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
         // Add the initial pipe
-//        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-//                450.0f + (measuredHeight - 900.0f) * new Random().nextFloat()));
         addPipe();
     }
 
@@ -306,6 +299,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         /* Adds a pipe into the list of pipes */
 
         pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-                base + (measuredHeight - 2 * base) * new Random().nextFloat()));
+                base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
     }
 }

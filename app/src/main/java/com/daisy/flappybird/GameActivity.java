@@ -356,4 +356,14 @@ public class GameActivity extends AppCompatActivity {
             audioRecorder.getNoiseLevel();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+
+        super.onBackPressed();
+    }
 }
