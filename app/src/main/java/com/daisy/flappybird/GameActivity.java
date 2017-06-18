@@ -80,6 +80,7 @@ public class GameActivity extends AppCompatActivity {
                             timer.cancel();
                             timer.purge();
                         } else {
+                            audioRecorder.isGetVoiceRun = false;
                             audioRecorder = null;
                             System.gc();
                         }
@@ -188,6 +189,9 @@ public class GameActivity extends AppCompatActivity {
                 }
             });
         } else {
+            // Derek is debugging...
+            Log.i("DerekDick", "MainActivity onCreate() audioRecorder");
+
             audioRecorder = new AudioRecorder();
             audioRecorder.getNoiseLevel();
         }
@@ -235,7 +239,7 @@ public class GameActivity extends AppCompatActivity {
                         // 平方和除以数据总长度，得到音量大小。
                         double mean = v / (double) r;
                         double volume = 10 * Math.log10(mean);
-//                        Log.i(TAG, "分贝值:" + volume);
+                        Log.i(TAG, "分贝值:" + volume);
 
                         // Jump if the volume is loud enough
                         if (volume > 50.0) {
@@ -305,6 +309,11 @@ public class GameActivity extends AppCompatActivity {
         if (timer != null) {
             timer.cancel();
             timer.purge();
+        }
+
+        if (audioRecorder != null) {
+            audioRecorder.isGetVoiceRun = false;
+            audioRecorder = null;
         }
 
         isSetNewTimerThreadEnabled = false;
