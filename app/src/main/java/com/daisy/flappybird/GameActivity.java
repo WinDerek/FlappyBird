@@ -25,6 +25,12 @@ public class GameActivity extends AppCompatActivity {
 
     private boolean isGameOver;
 
+//    private static volatile boolean isSetNewTimerThreadEnabled;
+//    private static boolean isSetNewTimerThreadEnabled;
+    private boolean isSetNewTimerThreadEnabled;
+
+    private Thread setNewTimerThread;
+
     // Derek is debugging...
     private int sendTimes = 0;
     private int handleTimes = 0;
@@ -140,7 +146,8 @@ public class GameActivity extends AppCompatActivity {
         }
 
         // Set the Timer
-        new Thread(new Runnable() {
+        isSetNewTimerThreadEnabled = true;
+        setNewTimerThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -149,10 +156,13 @@ public class GameActivity extends AppCompatActivity {
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 } finally {
-                    setNewTimer();
+                    if (isSetNewTimerThreadEnabled) {
+                        setNewTimer();
+                    }
                 }
             }
-        }).start();
+        });
+        setNewTimerThread.start();
 
         if (gameMode == TOUCH_MODE) {
             // Jump listener
@@ -192,8 +202,6 @@ public class GameActivity extends AppCompatActivity {
         boolean isGetVoiceRun;
         Object mLock;
 
-        private Thread thread;
-
         public AudioRecorder() {
             mLock = new Object();
         }
@@ -211,7 +219,7 @@ public class GameActivity extends AppCompatActivity {
             }
             isGetVoiceRun = true;
 
-            thread = new Thread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mAudioRecord.startRecording();
@@ -248,8 +256,7 @@ public class GameActivity extends AppCompatActivity {
                     mAudioRecord.release();
                     mAudioRecord = null;
                 }
-            });
-            thread.start();
+            }).start();
         }
     }
 
@@ -264,7 +271,14 @@ public class GameActivity extends AppCompatActivity {
         /* Sets the Timer to update the UI of the GameView  */
 
         // Derek is debugging...
-        Log.i("DerekDick", "MainActivity setNewTimer");
+        Log.i("DerekDick", "MainActivity setNewTimer()");
+
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity setNewTimer() " +
+                String.valueOf(isSetNewTimerThreadEnabled));
+        if (!isSetNewTimerThreadEnabled) {
+            return;
+        }
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -285,25 +299,43 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onDestroy()");
 
-        timer.cancel();
-        timer.purge();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+
+        isSetNewTimerThreadEnabled = false;
+
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onDestroy()" +
+                String.valueOf(isSetNewTimerThreadEnabled));
+
+        super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onPause()");
 
-//        timer.cancel();
-//        timer.purge();
+        isSetNewTimerThreadEnabled = false;
+
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onPause()" +
+                String.valueOf(isSetNewTimerThreadEnabled));
+
+        super.onPause();
     }
 
     @Override
     protected void onRestart() {
-        super.onRestart();
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onRestart()");
 
-//        setNewTimer();
+        super.onRestart();
     }
 
     public void updateScore(int score) {
@@ -338,7 +370,8 @@ public class GameActivity extends AppCompatActivity {
         }).start();
 
         if (gameMode == TOUCH_MODE) {
-            new Thread(new Runnable() {
+            isSetNewTimerThreadEnabled = true;
+            setNewTimerThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -347,10 +380,13 @@ public class GameActivity extends AppCompatActivity {
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     } finally {
-                        setNewTimer();
+                        if (isSetNewTimerThreadEnabled) {
+                            setNewTimer();
+                        }
                     }
                 }
-            }).start();
+            });
+            setNewTimerThread.start();
         } else {
             audioRecorder = new AudioRecorder();
             audioRecorder.getNoiseLevel();
@@ -359,10 +395,18 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onBackPressed()");
+
         if (timer != null) {
             timer.cancel();
             timer.purge();
         }
+
+        isSetNewTimerThreadEnabled = false;
+        // Derek is debugging...
+        Log.i("DerekDick", "MainActivity onBackPressed()" +
+                String.valueOf(isSetNewTimerThreadEnabled));
 
         super.onBackPressed();
     }

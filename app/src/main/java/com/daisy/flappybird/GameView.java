@@ -258,7 +258,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void removeItemsFromPipeList(List<Integer> removeList) {
-        /* Removes all the items at the indices spacified by removeList */
+        /* Removes all the items at the indices specified by removeList */
 
         List newList = new ArrayList();
         int size = pipeList.size();
