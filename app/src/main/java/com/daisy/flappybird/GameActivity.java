@@ -74,7 +74,6 @@ public class GameActivity extends AppCompatActivity {
                             timer.cancel();
                             timer.purge();
                         } else {
-//                            audioRecorder.stopThread();
                             audioRecorder = null;
                             System.gc();
                         }
@@ -251,10 +250,6 @@ public class GameActivity extends AppCompatActivity {
                 }
             });
             thread.start();
-        }
-
-        public void stopThread() {
-            thread.stop();
         }
     }
 

@@ -52,7 +52,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     // For the pipes
     private int iteratorInt = 0;
     private static final int interval = 150;
-    private static final float gap = 300.0f;
+    private static final float gap = 450.0f;
+    private static final float base = 100.0f;
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
     private static final float pipeVelocity = 3.0f;
@@ -166,8 +167,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pipe.setPositionX(pipe.getPositionX() - pipeVelocity);
         }
         if (iteratorInt == interval) {
-            pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-                    300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
+//            pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
+//                    450.0f + (measuredHeight - 900.0f) * new Random().nextFloat()));
+            addPipe();
             iteratorInt = 0;
         } else {
             iteratorInt++;
@@ -186,8 +188,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
         // Add the initial pipe
-        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-                300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
+//        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
+//                300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
+        addPipe();
     }
 
     public void jump() {
@@ -294,7 +297,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
         // Add the initial pipe
+//        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
+//                450.0f + (measuredHeight - 900.0f) * new Random().nextFloat()));
+        addPipe();
+    }
+
+    private void addPipe() {
+        /* Adds a pipe into the list of pipes */
+
         pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-                300.0f + (measuredHeight - 600.0f) * new Random().nextFloat()));
+                base + (measuredHeight - 2 * base) * new Random().nextFloat()));
     }
 }
