@@ -29,6 +29,8 @@ public class GameActivity extends AppCompatActivity {
 //    private static boolean isSetNewTimerThreadEnabled;
     private boolean isSetNewTimerThreadEnabled;
 
+    private int volumeThreshold;
+
     private Thread setNewTimerThread;
 
     // Derek is debugging...
@@ -47,8 +49,6 @@ public class GameActivity extends AppCompatActivity {
     private static final int VOICE_MODE = 0x01;
 
     private Timer timer;
-
-    private int score = 0;
 
     private Handler handler = new Handler() {
         @Override
@@ -130,7 +130,7 @@ public class GameActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_touch);
+        setContentView(R.layout.activity_main);
 
         // Initialize the private views
         initViews();
@@ -144,6 +144,8 @@ public class GameActivity extends AppCompatActivity {
             gameMode = TOUCH_MODE;
         } else {
             gameMode = VOICE_MODE;
+
+            volumeThreshold = getIntent().getIntExtra("VolumeThreshold", 50);
         }
 
         // Set the Timer
@@ -242,12 +244,11 @@ public class GameActivity extends AppCompatActivity {
                         Log.i(TAG, "分贝值:" + volume);
 
                         // Jump if the volume is loud enough
-                        if (volume > 50.0) {
+                        if (volume > volumeThreshold) {
                             GameActivity.this.gameView.jump();
                             Log.i(TAG, "分贝值: " + volume + "超过了");
                         }
 
-                        // 大概一秒十次
                         synchronized (mLock) {
                             try {
                                 mLock.wait(17);

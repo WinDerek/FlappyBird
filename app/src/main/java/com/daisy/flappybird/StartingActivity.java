@@ -3,17 +3,22 @@ package com.daisy.flappybird;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.NumberPicker;
 
 public class StartingActivity extends AppCompatActivity {
     private static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 0x00;
+
+    private int volumeThreshold;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +28,10 @@ public class StartingActivity extends AppCompatActivity {
         // Hide the status bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Get the volume threshold
+        SharedPreferences settings = getPreferences(0);
+        volumeThreshold = settings.getInt("VolumeThreshold", 50);
     }
 
     public void goToTouchActivity(View view) {
@@ -44,6 +53,7 @@ public class StartingActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("Mode", "Voice");
+            intent.putExtra("VolumeThreshold", volumeThreshold);
             startActivity(intent);
         }
     }
@@ -77,5 +87,38 @@ public class StartingActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    public void adjustVolumeThreshold(View view) {
+        /* On click of the FloatingActionButton to adjust the volume threshold */
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Scroll to adjust the threshold of you voice.");
+        alertDialog.setIcon(R.drawable.ic_bird);
+        View alertDialogView = LayoutInflater.from(this)
+                .inflate(R.layout.alert_dialog_adjust_volume_threshold, null);
+        NumberPicker numberPicker = (NumberPicker) alertDialogView.findViewById(R.id.number_picker);
+        numberPicker.setMaxValue(300);
+        numberPicker.setMinValue(0);
+        numberPicker.setValue(volumeThreshold);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker np, int oldValue, int newValue) {
+                volumeThreshold = np.getValue();
+            }
+        });
+        alertDialog.setView(alertDialogView);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                // Save the change in the SharedPreferences
+                SharedPreferences settings = StartingActivity.this.getPreferences(0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("VolumeThreshold", StartingActivity.this.volumeThreshold);
+                editor.apply();
+            }
+        });
+        alertDialog.setCancelable(false);
+        alertDialog.show();
     }
 }
