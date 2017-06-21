@@ -2,21 +2,15 @@ package com.daisy.flappybird;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,8 +18,6 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private float measuredWidth;
@@ -33,6 +25,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder;
     private Paint paint;
     private Bitmap bitmap;
+
+    // The colors
+    private static final int colorPipe = Color.parseColor("#C75B39");
 
     // The current score
     private int score = 0;
@@ -129,7 +124,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
         // Draw the pipes
-        paint.setColor(Color.parseColor("#C75B39"));
+        paint.setColor(colorPipe);
         List<Integer> removeList = new ArrayList<Integer>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
