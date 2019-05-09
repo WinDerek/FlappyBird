@@ -27,7 +27,6 @@ public class StartingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_starting);
 
         // Hide the status bar
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

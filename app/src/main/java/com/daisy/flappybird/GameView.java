@@ -15,6 +15,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.daisy.flappybird.domain.Pipe;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

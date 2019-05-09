@@ -1,4 +1,4 @@
-package com.daisy.flappybird;
+package com.daisy.flappybird.domain;
 
 public class Pipe {
 
