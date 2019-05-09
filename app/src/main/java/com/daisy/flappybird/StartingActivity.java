@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.NumberPicker;
 
 public class StartingActivity extends AppCompatActivity {
+
     private static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 0x00;
 
     private int volumeThreshold;
@@ -26,7 +27,8 @@ public class StartingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_starting);
 
         // Hide the status bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Get the volume threshold
@@ -35,16 +37,12 @@ public class StartingActivity extends AppCompatActivity {
     }
 
     public void goToTouchActivity(View view) {
-        /* On click of the button touch control */
-
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("Mode", "Touch");
         startActivity(intent);
     }
 
     public void goToVoiceActivity(View view) {
-        /* On click of the button voice control */
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -90,8 +88,6 @@ public class StartingActivity extends AppCompatActivity {
     }
 
     public void adjustVolumeThreshold(View view) {
-        /* On click of the FloatingActionButton to adjust the volume threshold */
-
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Scroll to adjust the threshold of you voice.");
         alertDialog.setIcon(R.drawable.ic_bird);
@@ -121,4 +117,5 @@ public class StartingActivity extends AppCompatActivity {
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
+
 }

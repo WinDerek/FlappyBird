@@ -20,10 +20,15 @@ import java.util.List;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+
     private float measuredWidth;
+
     private float measuredHeight;
+
     private SurfaceHolder surfaceHolder;
+
     private Paint paint;
+
     private Bitmap bitmap;
 
     // The colors
@@ -84,12 +89,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
     }
 
     private void init() {
-        /* Initializes */
-
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
@@ -106,13 +108,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // For the pipes
         pipeList = new ArrayList<Pipe>();
 
-//        setFocusable(true);
         setKeepScreenOn(true);
     }
 
+    /**
+     * Updates the UI.
+     */
     public void update() {
-        /* Updates the UI */
-
         paint.setStyle(Paint.Style.FILL);
 
         Canvas canvas = surfaceHolder.lockCanvas();
@@ -125,7 +127,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // Draw the pipes
         paint.setColor(colorPipe);
-        List<Integer> removeList = new ArrayList<Integer>();
+        List<Integer> removeList = new ArrayList<>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
             Pipe pipe = pipeList.get(index);
@@ -208,9 +210,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return bitmap;
     }
 
+    /**
+     * Returns true if the bird is still alive, false otherwise.
+     *
+     * @return True if the bird is still alive, false otherwise.
+     */
     public boolean isAlive() {
-        /* Checks if the bird is still alive */
-
         // Check if the bird hits the pipes
         for (Pipe pipe : pipeList) {
             if ((pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) &&
@@ -242,19 +247,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
+    /**
+     * Returns true if the pipe is out of the screen, false otherwise.
+     *
+     * @param pipe The pipe to be judged.
+     *
+     * @return True if the pipe is out of the screen, false otherwise.
+     */
     private boolean isPipeOut(Pipe pipe) {
-        /* Checks if the pipe is out of the screen */
-
-        if (pipe.getPositionX() + pipeWidth / 2.0f < 0.0f) {
-            return true;
-        } else {
-            return false;
-        }
+        return (pipe.getPositionX() + pipeWidth / 2.0f) < 0.0f;
     }
 
+    /**
+     * Removes all the items at the indices specified by removeList.
+     *
+     * @param removeList The list of indices.
+     */
     private void removeItemsFromPipeList(List<Integer> removeList) {
-        /* Removes all the items at the indices specified by removeList */
-
         List newList = new ArrayList();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
@@ -266,9 +275,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         pipeList = newList;
     }
 
+    /**
+     * Resets all the data of the over game.
+     */
     public void resetData() {
-        /* Resets all the data of the over game */
-
         // For the bird
         positionX = 0.0f;
         positionY = 0.0f;
@@ -279,7 +289,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // For the pipes
         iteratorInt = 0;
-        pipeList = new ArrayList<Pipe>();
+        pipeList = new ArrayList<>();
 
         score = 0;
 
@@ -290,10 +300,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         addPipe();
     }
 
+    /**
+     * Adds a pipe into the list of pipes.
+     */
     private void addPipe() {
-        /* Adds a pipe into the list of pipes */
-
         pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
                 base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
     }
+
 }

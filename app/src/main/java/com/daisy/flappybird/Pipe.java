@@ -1,7 +1,9 @@
 package com.daisy.flappybird;
 
 public class Pipe {
+
     private float positionX;
+
     private float height;
 
     public Pipe(float positionX, float height) {
@@ -20,4 +22,5 @@ public class Pipe {
     public float getHeight() {
         return height;
     }
+
 }

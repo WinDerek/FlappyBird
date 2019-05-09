@@ -20,22 +20,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
+
     private GameView gameView;
     private TextView textViewScore;
 
     private boolean isGameOver;
 
-//    private static volatile boolean isSetNewTimerThreadEnabled;
-//    private static boolean isSetNewTimerThreadEnabled;
     private boolean isSetNewTimerThreadEnabled;
 
     private int volumeThreshold;
 
     private Thread setNewTimerThread;
-
-    // Derek is debugging...
-    private int sendTimes = 0;
-    private int handleTimes = 0;
 
     private AlertDialog.Builder alertDialog;
 
@@ -54,11 +49,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message message) {
             switch (message.what) {
-                case UPDATE:
-                    // Derek is debugging...
-                    Log.i("DerekDick", "MainActivity handler handleMessage " +
-                            String.valueOf(++handleTimes));
-
+                case UPDATE: {
                     if (gameView.isAlive()) {
                         isGameOver = false;
                         gameView.update();
@@ -69,13 +60,7 @@ public class GameActivity extends AppCompatActivity {
                             isGameOver = true;
                         }
 
-                        // Derek is debugging...
-                        Log.i("DerekDick", "MainActivity game over");
-
                         if (gameMode == TOUCH_MODE) {
-                            // Derek is debugging...
-                            Log.i("DerekDick", "MainActivity timer cancelled");
-
                             // Cancel the timer
                             timer.cancel();
                             timer.purge();
@@ -106,14 +91,17 @@ public class GameActivity extends AppCompatActivity {
                     }
 
                     break;
+                }
 
-                case RESET_SCORE:
+                case RESET_SCORE: {
                     textViewScore.setText("0");
 
                     break;
+                }
 
-                default:
+                default: {
                     break;
+                }
             }
         }
     };
@@ -127,7 +115,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Hide the status bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_game);
@@ -191,21 +179,24 @@ public class GameActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // Derek is debugging...
-            Log.i("DerekDick", "MainActivity onCreate() audioRecorder");
-
             audioRecorder = new AudioRecorder();
             audioRecorder.getNoiseLevel();
         }
     }
 
     private class AudioRecorder {
+
         private static final String TAG = "AudioRecord";
+
         int SAMPLE_RATE_IN_HZ = 8000;
+
         int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ,
                 AudioFormat.CHANNEL_IN_DEFAULT, AudioFormat.ENCODING_PCM_16BIT);
+
         AudioRecord mAudioRecord;
+
         boolean isGetVoiceRun;
+
         Object mLock;
 
         public AudioRecorder() {
@@ -226,6 +217,7 @@ public class GameActivity extends AppCompatActivity {
             isGetVoiceRun = true;
 
             new Thread(new Runnable() {
+
                 @Override
                 public void run() {
                     mAudioRecord.startRecording();
@@ -261,52 +253,41 @@ public class GameActivity extends AppCompatActivity {
                     mAudioRecord.release();
                     mAudioRecord = null;
                 }
+
             }).start();
         }
     }
 
     private void initViews() {
-        /* Initializes the private views */
-
-        gameView = (GameView) findViewById(R.id.game_view);
-        textViewScore = (TextView) findViewById(R.id.text_view_score);
+        gameView = findViewById(R.id.game_view);
+        textViewScore = findViewById(R.id.text_view_score);
     }
 
+    /**
+     * Sets the Timer to update the UI of the GameView.
+     */
     private void setNewTimer() {
-        /* Sets the Timer to update the UI of the GameView  */
-
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity setNewTimer()");
-
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity setNewTimer() " +
-                String.valueOf(isSetNewTimerThreadEnabled));
         if (!isSetNewTimerThreadEnabled) {
             return;
         }
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
+
             @Override
             public void run() {
-                // Derek is debugging...
-                Log.i("DerekDick", "MainActivity timer UPDATE message about to be sent " +
-                        String.valueOf(++sendTimes));
-
                 // Send the message to the handler to update the UI of the GameView
                 GameActivity.this.handler.sendEmptyMessage(UPDATE);
 
                 // For garbage collection
                 System.gc();
             }
+
         }, 0, 17);
     }
 
     @Override
     protected void onDestroy() {
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onDestroy()");
-
         if (timer != null) {
             timer.cancel();
             timer.purge();
@@ -319,69 +300,60 @@ public class GameActivity extends AppCompatActivity {
 
         isSetNewTimerThreadEnabled = false;
 
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onDestroy()" +
-                String.valueOf(isSetNewTimerThreadEnabled));
-
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onPause()");
-
         isSetNewTimerThreadEnabled = false;
-
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onPause()" +
-                String.valueOf(isSetNewTimerThreadEnabled));
 
         super.onPause();
     }
 
     @Override
     protected void onRestart() {
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onRestart()");
-
         super.onRestart();
     }
 
+    /**
+     * Updates the displayed score.
+     *
+     * @param score The new score.
+     */
     public void updateScore(int score) {
-        /* Updates the displayed score */
-
         textViewScore.setText(String.valueOf(score));
     }
 
+    /**
+     * Plays the music for score.
+     */
     public void playScoreMusic() {
-        /* Plays the music for score */
-
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity playScoreMusic");
-
         if (gameMode == TOUCH_MODE) {
             mediaPlayer.start();
         }
     }
 
+    /**
+     * Restarts the game.
+     */
     private void restartGame() {
-        /* Restarts the game */
-
         // Reset all the data of the over game in the GameView
         gameView.resetData();
 
         // Refresh the TextView for displaying the score
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 handler.sendEmptyMessage(RESET_SCORE);
             }
+
         }).start();
 
         if (gameMode == TOUCH_MODE) {
             isSetNewTimerThreadEnabled = true;
             setNewTimerThread = new Thread(new Runnable() {
+
                 @Override
                 public void run() {
                     try {
@@ -395,6 +367,7 @@ public class GameActivity extends AppCompatActivity {
                         }
                     }
                 }
+
             });
             setNewTimerThread.start();
         } else {
@@ -405,19 +378,14 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onBackPressed()");
-
         if (timer != null) {
             timer.cancel();
             timer.purge();
         }
 
         isSetNewTimerThreadEnabled = false;
-        // Derek is debugging...
-        Log.i("DerekDick", "MainActivity onBackPressed()" +
-                String.valueOf(isSetNewTimerThreadEnabled));
 
         super.onBackPressed();
     }
+
 }
