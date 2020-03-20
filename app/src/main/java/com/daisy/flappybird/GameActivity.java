@@ -205,14 +205,13 @@ public class GameActivity extends AppCompatActivity {
 
         public void getNoiseLevel() {
             if (isGetVoiceRun) {
-                Log.e(TAG, "还在录着呢");
                 return;
             }
             mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
                     SAMPLE_RATE_IN_HZ, AudioFormat.CHANNEL_IN_DEFAULT,
                     AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE);
             if (mAudioRecord == null) {
-                Log.e(TAG, "mAudioRecord初始化失败");
+                Log.e(TAG, "mAudioRecord initialization failed.");
             }
             isGetVoiceRun = true;
 
@@ -223,7 +222,7 @@ public class GameActivity extends AppCompatActivity {
                     mAudioRecord.startRecording();
                     short[] buffer = new short[BUFFER_SIZE];
                     while (isGetVoiceRun) {
-                        //r是实际读取的数据长度，一般而言r会小于buffersize
+                        // r是实际读取的数据长度，一般而言r会小于buffersize
                         int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
                         long v = 0;
                         // 将 buffer 内容取出，进行平方和运算

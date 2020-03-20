@@ -6,6 +6,8 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
@@ -159,7 +161,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         positionX += velocityX;
         positionY += velocityY;
         velocityX += accelerationX;
-        velocityY += accelerationY;
+//        velocityY += accelerationY;
+        // Only accelerate velocityY when it is not too large
+        if (velocityY <= 10.0F) {
+            velocityY += accelerationY;
+        }
 
         // Update the data for the pipes
         for (Pipe pipe : pipeList) {
@@ -198,7 +204,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
@@ -266,10 +272,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * @param removeList The list of indices.
      */
     private void removeItemsFromPipeList(List<Integer> removeList) {
-        List newList = new ArrayList();
+        List<Pipe> newList = new ArrayList<>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
-            if (!removeList.remove(new Integer(index))) {
+            if (!removeList.remove(Integer.valueOf(index))) {
                 newList.add(pipeList.get(index));
             }
         }
